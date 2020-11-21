@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TraceView>
+  <Project>
+    <Session Name="TraceView_pyetw" Guid="4CA5181F-7319-11ED-9E73-50EBF63DF877" Mode="Realtime" Active="true">
+      <Providers>
+        <Provider Name="root" Guid="FC83BA60-40A1-52C0-E5E1-7538F57DC11C" Enabled="true"/>
+        <Provider Name="demo" Guid="A61566EF-3013-54C0-3FC6-0ADEADDC82DB" Enabled="true"/>
+        <Provider Name="loop" Guid="8A657856-8379-542B-437A-8FDCD7E4128C" Enabled="true"/>
+      </Providers>
+    </Session>
+    <Filters/>
+    <Colors>
+      <Color Name="Critical" Foreground="#000000" Background="#AAAAFF">
+        <Filter>
+          <Rules>
+            <Rule Enabled="true" Column="LevelName" Relation="Is" Value="CRITICAL" Action="Include"/>
+          </Rules>
+        </Filter>
+      </Color>
+      <Color Name="Warning" Foreground="#000000" Background="#FFC6AA">
+        <Filter>
+          <Rules>
+            <Rule Enabled="true" Column="LevelName" Relation="Is" Value="WARNING" Action="Include"/>
+          </Rules>
+        </Filter>
+      </Color>
+      <Color Name="Error" Foreground="#000000" Background="#FFAAAA">
+        <Filter>
+          <Rules>
+            <Rule Enabled="true" Column="LevelName" Relation="Is" Value="ERROR" Action="Include"/>
+          </Rules>
+        </Filter>
+      </Color>
+    </Colors>
+  </Project>
+</TraceView>
