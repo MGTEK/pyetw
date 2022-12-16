@@ -6,3 +6,8 @@ black
 # Build
 build
 twine
+
+# Documentation
+sphinx
+sphinx-rtd-theme
+sphinx-autodoc-typehints
