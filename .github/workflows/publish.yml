@@ -1,0 +1,56 @@
+#
+# publish.yml - GitHub deploy action for pyetw
+# Copyright (C) 2022 Marius Greuel
+#
+# SPDX-License-Identifier: MIT
+#
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: PyETW Release ${{github.ref}}
+          body: |
+            This release is available via PyPI from https://pypi.org/project/pyetw.
+
+            You can install the latest version of PyETW by running
+
+            ```
+            pip install --upgrade pyetw
+            ```
+          draft: false
+          prerelease: false
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Dependencies
+        run: pip install build twine
+      - name: Build Package
+        run: make build
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
