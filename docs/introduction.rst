@@ -42,6 +42,50 @@ the log records are written as ETW TraceLogging events.
 
 To record and view the traces, you can use any ETW tracing tool.
 
+ETW Provider GUID hash
+======================
+
+**PyEtw** uses the standard TraceLogging hashing algorithm to
+derive the provider GUID from the trace provider name,
+which is set to the Python logger name by default.
+
+If your tracing tool is not able to generate the provider GUID from the provider name,
+you can use the `guid` property of the `EventProvider` class to obtain the GUID.
+For instance, to get the provider GUID for the `root` logger,
+enter the following command:
+
+.. code-block::
+
+   python -c "import pyetw;print(pyetw.EventProvider('root').guid)"
+
+Recording ETW Traces
+====================
+
+Here is an example that records the events of the `root` logger to a trace file
+using `Tracelog <https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/tracelog>`_,
+which is included in the `Windows SDK <https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/>`_
+
+.. code-block::
+
+   C:\Temp> tracelog -start mytrace -guid *root
+
+Note that the specified GUID must match the name of the Python logger.
+Prefix the logger name with a **star** to have tracelog create a GUID hash of the logger name.
+
+After you are done running the Python example from above, run
+
+.. code-block::
+
+   C:\Temp> tracelog -stop mytrace
+
+When the trace is stopped, you will have a file `LogFile.Etl` that contains a single trace record.
+
+To view the recorded trace, you can write
+
+.. code-block::
+
+   C:\Temp> tracefmt -displayonly LogFile.Etl
+
 Installing PyEtw
 ================
 

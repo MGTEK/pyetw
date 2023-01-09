@@ -40,6 +40,21 @@ the log records are written as ETW TraceLogging events.
 
 To record and view the traces, you can use any ETW tracing tool.
 
+## ETW Provider GUID hash
+
+**PyEtw** uses the standard TraceLogging hashing algorithm to
+derive the provider GUID from the trace provider name,
+which is set to the Python logger name by default.
+
+If your tracing tool is not able to generate the provider GUID from the provider name,
+you can use the `guid` property of the `EventProvider` class to obtain the GUID.
+For instance, to get the provider GUID for the `root` logger,
+enter the following command:
+
+```console
+python -c "import pyetw;print(pyetw.EventProvider('root').guid)"
+```
+
 ## Recording ETW Traces
 
 Here is an example that records the events of the `root` logger to a trace file
