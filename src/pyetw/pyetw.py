@@ -228,6 +228,16 @@ class EventProvider:
             self._handle = None
 
     @property
+    def name(self) -> str:
+        """Returns the name of the provider."""
+        return self._name
+
+    @property
+    def guid(self) -> str:
+        """Returns the GUID of the provider."""
+        return self._id
+
+    @property
     def is_open(self) -> bool:
         """Returns True if the provider has been registered with Windows."""
         return not self._handle is None
