@@ -37,6 +37,29 @@ REGHANDLE = c_ulonglong
 ERROR_SUCCESS = 0
 
 
+def _etw_function(name: str, *args):
+    def errcheck(result, _, args):
+        if result != ERROR_SUCCESS:
+            raise OSError(f"{function.name} failed with error code {result}.")
+
+        return args
+
+    argtypes = (arg[1] for arg in args)
+    paramflags = tuple((arg[0], arg[2]) for arg in args)
+    prototype = WINFUNCTYPE(c_ulong, *argtypes)
+    function = prototype((name, windll.advapi32), paramflags)
+    function.errcheck = errcheck
+    setattr(function, "name", name)
+    return function
+
+
+def _etw_function_bool(name: str, *args):
+    argtypes = (arg[1] for arg in args)
+    paramflags = tuple((arg[0], arg[2]) for arg in args)
+    prototype = WINFUNCTYPE(c_bool, *argtypes)
+    return prototype((name, windll.advapi32), paramflags)
+
+
 # pylint: disable-next=too-few-public-methods
 class _EventDescriptor(Structure):
     _fields_ = [
@@ -131,29 +154,6 @@ class Event:
 
 class EventProvider:
     """Represents an ETW tracelogging provider."""
-
-    @staticmethod
-    def _etw_function(name: str, *args):
-        def errcheck(result, _, args):
-            if result != ERROR_SUCCESS:
-                raise OSError(f"{function.name} failed with error code {result}.")
-
-            return args
-
-        argtypes = (arg[1] for arg in args)
-        paramflags = tuple((arg[0], arg[2]) for arg in args)
-        prototype = WINFUNCTYPE(c_ulong, *argtypes)
-        function = prototype((name, windll.advapi32), paramflags)
-        function.errcheck = errcheck
-        setattr(function, "name", name)
-        return function
-
-    @staticmethod
-    def _etw_function_bool(name: str, *args):
-        argtypes = (arg[1] for arg in args)
-        paramflags = tuple((arg[0], arg[2]) for arg in args)
-        prototype = WINFUNCTYPE(c_bool, *argtypes)
-        return prototype((name, windll.advapi32), paramflags)
 
     _EventRegister = _etw_function(
         "EventRegister",
