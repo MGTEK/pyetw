@@ -9,6 +9,7 @@
 import logging
 import pyetw
 
+
 def some_fun():
     logging.basicConfig(level=logging.DEBUG, handlers=(pyetw.LoggerHandler(),))
     logging.debug("This is a 'debug' message")
@@ -17,5 +18,6 @@ def some_fun():
     logging.error("This is a 'error' message")
     logging.critical("This is a 'critical' message")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     some_fun()
